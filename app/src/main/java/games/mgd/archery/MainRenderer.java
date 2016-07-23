@@ -24,6 +24,8 @@ public class MainRenderer implements Renderer{
     private MainLogic game;
     private GameTimer timer;
 
+    private int width, height;
+
     public MainRenderer(Context context){
         this.context = context;
 
@@ -46,7 +48,8 @@ public class MainRenderer implements Renderer{
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-
+        this.width = width;
+        this.height = height;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class MainRenderer implements Renderer{
 
         if(GameThread.INSTANCE.isInitialized()){
             game.inititalize(context);
-
+            game.setupCamera(width, height);
             GameThread.INSTANCE.run();
         }
 

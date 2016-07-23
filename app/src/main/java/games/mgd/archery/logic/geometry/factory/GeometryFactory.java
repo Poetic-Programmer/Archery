@@ -1,6 +1,7 @@
 package games.mgd.archery.logic.geometry.factory;
 
 import games.mgd.archery.logic.geometry.structure.Structure;
+import games.mgd.archery.logic.geometry.structure.StructureType;
 
 /**
  * Created by Michael on 20/02/2016.
@@ -14,14 +15,5 @@ import games.mgd.archery.logic.geometry.structure.Structure;
  */
 
 public interface GeometryFactory {
-    public static enum GeometryType{
-        CUBE,
-        BOW,
-        NEW_BOW,
-        LINE,
-        LINE_AND_CIRCLE,
-        CIRCLE
-    }
-
-    public Structure build(GeometryType type);
+    public Structure build(StructureType type);
 }

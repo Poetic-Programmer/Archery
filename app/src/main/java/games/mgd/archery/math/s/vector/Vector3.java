@@ -1,5 +1,7 @@
 package games.mgd.archery.math.s.vector;
 
+import android.util.Log;
+
 import games.mgd.archery.math.s.matrix.Matrix44;
 import games.mgd.archery.util.MathHelper;
 
@@ -36,6 +38,26 @@ public class Vector3
 		dst[0] = x;
 		dst[1] = y;
 		dst[2] = z;
+	}
+
+	public static float [] multiplyMatrix4(float [] vector, float [] matrix, boolean homogenous)
+	{
+		if(homogenous){
+			return create(
+					(matrix[0]*vector[0] + matrix[4]*vector[1]
+							+ matrix[8]*vector[2] + matrix[12]),
+
+					(matrix[1]*vector[0] + matrix[5]*vector[1]
+							+ matrix[9]*vector[2] + matrix[13]),
+
+					(matrix[2]*vector[0] + matrix[6]*vector[1]
+							+ matrix[10]*vector[2] + matrix[14]));
+		}
+		else{
+			// @ToDo: remove
+			Log.d("Vector3", "no need for this matrix mutiplication");
+			return create(0, 0, 0);
+		}
 	}
 	public static void setElement(float [] dst, final int index, final float val)
 	{
@@ -214,7 +236,7 @@ public class Vector3
 	{
 		float [] temp = {src[0], src[1], src[2], 1.0f};
 		float [] mat = new float[16];
-		Matrix44.Identity(mat);
+		Matrix44.identity(mat);
 		Matrix44.SetRotation(mat, axisX * angle, axisY * angle, axisZ * angle);
 		Matrix44.MultiplyVector(temp, temp, mat);
 		dst[0] = temp[0];

@@ -7,6 +7,7 @@ import android.content.Context;
  */
 public interface Game {
     void inititalize(Context context);
+    void setupCamera(int width, int height);
     void pause();
     void update();
     void render();

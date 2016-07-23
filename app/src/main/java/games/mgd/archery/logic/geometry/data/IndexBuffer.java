@@ -20,6 +20,7 @@ public class IndexBuffer {
 
     public int getId() { return id; }
     public int getSize() { return size; }
+
     public static IndexBuffer createWith(short [] indices){
         return new IndexBuffer(
                 getId(indices), indices.length

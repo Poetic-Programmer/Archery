@@ -47,7 +47,6 @@ public abstract class Structure {
         short [] indices = createIndices();
 
         indexBuffer = IndexBuffer.createWith(indices);
-
         vertexBuffer = createVertexBuffer(vertices);
         vertexBufferId = getVertexBufferId(vertices);
         //indexBufferId = getIndexBufferId(indices);

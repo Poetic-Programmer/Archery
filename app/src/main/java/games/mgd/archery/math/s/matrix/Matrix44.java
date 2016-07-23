@@ -1,12 +1,69 @@
 package games.mgd.archery.math.s.matrix;
 
+import android.util.Log;
+
 public class Matrix44
 {
 	//private static float [] m_buffer = new float[16];
 	//private static float [] m_v4Buffer = new float[4];
 	//private static float [] m_v3Buffer = new float[3];
+
+	public static float [] createIdentity(){
+        return new float []{
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f
+        };
+    }
+
+    public static float [] create(
+            float m00, float m01, float m02, float m03,
+            float m10, float m11, float m12, float m13,
+            float m20, float m21, float m22, float m23,
+            float m30, float m31, float m32, float m33){
+        return new float[]{
+            m00, m01, m02, m03,
+            m10, m11, m12, m13,
+            m20, m21, m22, m23,
+            m30, m31, m32, m33
+        };
+    }
+
+    public static float [] createTranslation(float x, float y, float z){
+        return create(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                x, y, z, 1
+        );
+    }
+    public static float [] createTranslation(float [] position){
+        return create(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                position[0], position[1], position[2], 1
+        );
+    }
     
-    public static void Set(float [] dst, float [] src) 
+    public static float [] createRotation(float x, float y, float z){
+        float Sx = (float) Math.sin(x);
+        float Cx = (float) Math.cos(x);
+
+        float Sy = (float) Math.sin(y);
+        float Cy = (float) Math.cos(y);
+
+        float Sz = (float) Math.sin(z);
+        float Cz = (float) Math.cos(z);
+        return create(
+                (Cy * Cz),      (Sx * Sy * Cz) + (Cx * Sz), -(Cx * Sy * Cz) + (Sx * Sz), 0,
+                -(Cy * Sz),     -(Sx * Sy * Sz) + (Cx * Cz),  (Cx * Sy * Sz) + (Sx * Cz), 0,
+                Sy,            -(Sx * Cy),                   (Cx * Cy),                  0,
+                0,               0,                           0,                         1
+        );
+    }
+    public static void set(float [] dst, float [] src)
     { 
     	for(int i = 0; i < 16; ++i)
     		dst[i] = src[i];
@@ -100,7 +157,7 @@ public class Matrix44
 //
 //	}
 // --Commented out by Inspection STOP (25/08/2014 03:28)
-    public static void Identity(float [] dst)
+    public static void identity(float [] dst)
 	{
     	dst[0] = 1.0f;
     	dst[1] = 0.0f;
@@ -173,7 +230,7 @@ public class Matrix44
 //	}
 // --Commented out by Inspection STOP (25/08/2014 03:28)
    
-    public static void SetTranslation(float [] dst, float [] xlate)
+    public static void setTranslation(float [] dst, float [] xlate)
 	{
     	
     	dst[0] = 1.0f;
@@ -196,7 +253,7 @@ public class Matrix44
 	    dst[14] = xlate[2];
 	    dst[15] = 1.0f;
 	}
-	public static void SetTranslation(float[] dst, float x, float y,
+	public static void setTranslation(float[] dst, float x, float y,
 			float z) 
 	{
     	dst[0] = 1.0f;
@@ -545,44 +602,45 @@ public class Matrix44
 //	    }
 //	}
 // --Commented out by Inspection STOP (25/08/2014 03:28)
-    public static void MultiplyMatrix44(float [] dst, float [] src, float [] mat44)
+    public static void multiply(float [] dst, float [] a, float [] b)
 	{
-    	dst[0] = src[0]*mat44[0] + src[4]*mat44[1] + src[8]*mat44[2] 
-	                    + src[12]*mat44[3];
-    	dst[1] = src[1]*mat44[0] + src[5]*mat44[1] + src[9]*mat44[2] 
-	                    + src[13]*mat44[3];
-    	dst[2] = src[2]*mat44[0] + src[6]*mat44[1] + src[10]*mat44[2] 
-	                    + src[14]*mat44[3];
-    	dst[3] = src[3]*mat44[0] + src[7]*mat44[1] + src[11]*mat44[2] 
-	                    + src[15]*mat44[3];
+    	dst[0] = a[0]*b[0] + a[4]*b[1] + a[8]*b[2] 
+	                    + a[12]*b[3];
+    	dst[1] = a[1]*b[0] + a[5]*b[1] + a[9]*b[2] 
+	                    + a[13]*b[3];
+    	dst[2] = a[2]*b[0] + a[6]*b[1] + a[10]*b[2] 
+	                    + a[14]*b[3];
+    	dst[3] = a[3]*b[0] + a[7]*b[1] + a[11]*b[2] 
+	                    + a[15]*b[3];
 
-    	dst[4] = src[0]*mat44[4] + src[4]*mat44[5] + src[8]*mat44[6] 
-	                    + src[12]*mat44[7];
-    	dst[5] = src[1]*mat44[4] + src[5]*mat44[5] + src[9]*mat44[6] 
-	                    + src[13]*mat44[7];
-    	dst[6] = src[2]*mat44[4] + src[6]*mat44[5] + src[10]*mat44[6] 
-	                    + src[14]*mat44[7];
-    	dst[7] = src[3]*mat44[4] + src[7]*mat44[5] + src[11]*mat44[6] 
-	                    + src[15]*mat44[7];
+    	dst[4] = a[0]*b[4] + a[4]*b[5] + a[8]*b[6] 
+	                    + a[12]*b[7];
+    	dst[5] = a[1]*b[4] + a[5]*b[5] + a[9]*b[6] 
+	                    + a[13]*b[7];
+    	dst[6] = a[2]*b[4] + a[6]*b[5] + a[10]*b[6] 
+	                    + a[14]*b[7];
+    	dst[7] = a[3]*b[4] + a[7]*b[5] + a[11]*b[6] 
+	                    + a[15]*b[7];
 
-    	dst[8] = src[0]*mat44[8] + src[4]*mat44[9] + src[8]*mat44[10] 
-	                    + src[12]*mat44[11];
-    	dst[9] = src[1]*mat44[8] + src[5]*mat44[9] + src[9]*mat44[10] 
-	                    + src[13]*mat44[11];
-    	dst[10] = src[2]*mat44[8] + src[6]*mat44[9] + src[10]*mat44[10] 
-	                    + src[14]*mat44[11];
-    	dst[11] = src[3]*mat44[8] + src[7]*mat44[9] + src[11]*mat44[10] 
-	                    + src[15]*mat44[11];
+    	dst[8] = a[0]*b[8] + a[4]*b[9] + a[8]*b[10] 
+	                    + a[12]*b[11];
+    	dst[9] = a[1]*b[8] + a[5]*b[9] + a[9]*b[10] 
+	                    + a[13]*b[11];
+    	dst[10] = a[2]*b[8] + a[6]*b[9] + a[10]*b[10] 
+	                    + a[14]*b[11];
+    	dst[11] = a[3]*b[8] + a[7]*b[9] + a[11]*b[10] 
+	                    + a[15]*b[11];
 
-    	dst[12] = src[0]*mat44[12] + src[4]*mat44[13] + src[8]*mat44[14] 
-	                    + src[12]*mat44[15];
-    	dst[13] = src[1]*mat44[12] + src[5]*mat44[13] + src[9]*mat44[14] 
-	                    + src[13]*mat44[15];
-    	dst[14] = src[2]*mat44[12] + src[6]*mat44[13] + src[10]*mat44[14] 
-	                    + src[14]*mat44[15];
-    	dst[15] = src[3]*mat44[12] + src[7]*mat44[13] + src[11]*mat44[14] 
-	                    + src[15]*mat44[15];
+    	dst[12] = a[0]*b[12] + a[4]*b[13] + a[8]*b[14] 
+	                    + a[12]*b[15];
+    	dst[13] = a[1]*b[12] + a[5]*b[13] + a[9]*b[14] 
+	                    + a[13]*b[15];
+    	dst[14] = a[2]*b[12] + a[6]*b[13] + a[10]*b[14] 
+	                    + a[14]*b[15];
+    	dst[15] = a[3]*b[12] + a[7]*b[13] + a[11]*b[14] 
+	                    + a[15]*b[15];
 	}
+
     public static void MultiplyVector(float[] dst, float [] vector, float [] mat44) 
 	{
     	/*
@@ -660,14 +718,15 @@ public class Matrix44
 //	}
 // --Commented out by Inspection STOP (25/08/2014 03:28)
 
-    /*
-    public static void PrintRowMajor(String tag, float [] mat)
+
+    public static void printRowMajor(String tag, float [] mat)
     {
-    	(tag, "" + mat[0] + ", " + mat[1] + ", " + mat[2] + ", " + mat[3]);
-    	(tag, "" + mat[4] + ", " + mat[5] + ", " + mat[6] + ", " + mat[7]);
-    	(tag, "" + mat[8] + ", " + mat[9] + ", " + mat[10] + ", " + mat[11]);
-    	(tag, "" + mat[12] + ", " + mat[13] + ", " + mat[14] + ", " + mat[15]);
+    	Log.d(tag, "" + mat[0] + ", " + mat[1] + ", " + mat[2] + ", " + mat[3]);
+        Log.d(tag, "" + mat[4] + ", " + mat[5] + ", " + mat[6] + ", " + mat[7]);
+        Log.d(tag, "" + mat[8] + ", " + mat[9] + ", " + mat[10] + ", " + mat[11]);
+        Log.d(tag, "" + mat[12] + ", " + mat[13] + ", " + mat[14] + ", " + mat[15]);
     }
+    /*
     public static void PrintColMajor(String tag, float [] mat)
     {
     	(tag, "" + mat[0] + ", " + mat[4] + ", " + mat[8] + ", " + mat[12]);

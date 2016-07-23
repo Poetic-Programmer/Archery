@@ -1,6 +1,7 @@
 package games.mgd.archery.logic.geometry.structure.litTex;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,6 +213,8 @@ public class StructureBow  extends Structure {
         }
 
         numVertices = vertices.length;
+
+        //printVertices(vertices);
         return vertices;
     }
 
