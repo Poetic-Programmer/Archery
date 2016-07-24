@@ -64,7 +64,9 @@ public abstract class Structure {
             procedure.draw();
         }
     }
-
+    public void draw(int offset) {
+        drawProcedureList.get(offset).draw();
+    }
     public void printVertices(float [] vertices){
         for(float f : vertices){
             Log.d("GEO", "" + f);

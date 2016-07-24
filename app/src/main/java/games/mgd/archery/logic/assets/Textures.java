@@ -1,4 +1,4 @@
-package games.mgd.archery.logic.geometry;
+package games.mgd.archery.logic.assets;
 
 import android.content.Context;
 
@@ -6,8 +6,13 @@ import games.mgd.archery.R;
 import games.mgd.archery.util.TextureLoader;
 
 /**
- * Created by Michael on 23/07/2016.
+ * <h1> Textures Singleton </h1>
+ * <p> responsible for extending the list of textures used in the game </p>
+ *
+ * @author Michael Dunleavy
+ * @since 24/07/2016.
  */
+
 public enum Textures {
     INSTANCE;
 

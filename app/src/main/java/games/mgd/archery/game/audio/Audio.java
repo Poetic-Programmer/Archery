@@ -1,17 +1,24 @@
 package games.mgd.archery.game.audio;
 
-import java.io.IOException;
-
-import android.app.Activity;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.media.SoundPool.OnLoadCompleteListener;
-import android.util.Log;
-
+/**
+ * <h1> Audio Interface </h1>
+ * <p> interface for creating all audio </p>
+ *
+ * @author Michael Dunleavy
+ * @since 24/07/2016
+ */
 public interface Audio{
+    /**
+     * Creates a new MusicPlayer
+     * @param filename File path
+     * @return MusicPlayer accessed through Music interface
+     */
     Music newMusic(String filename);
 
+    /**
+     * Creates a new SoundPlayer
+     * @param filename File path
+     * @return SoundPlayer accessed through Sound interface
+     */
     Sound newSound(String filename);
 }

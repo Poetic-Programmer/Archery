@@ -1,14 +1,18 @@
 package games.mgd.archery;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
-    GLSurfaceView surfaceView;
     MainRenderer renderer;
+    GLSurfaceView surfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +24,15 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         renderer = new MainRenderer(this);
-
         surfaceView = new GLSurfaceView(this);
-        surfaceView.setEGLContextClientVersion(2);
-        surfaceView.setRenderer(renderer);
+
+        if(hasOpenGLES2(this)){
+            surfaceView.setEGLContextClientVersion(2);
+            surfaceView.setRenderer(renderer);
+        }
+        else{
+            Log.e(this.toString(), "No ES20 detected!");
+        }
 
         setContentView(surfaceView);
     }
@@ -56,5 +65,12 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         surfaceView.onResume();
+    }
+
+    private boolean hasOpenGLES2(Context context){
+        ActivityManager am =
+                (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        ConfigurationInfo info = am.getDeviceConfigurationInfo();
+        return (info.reqGlEsVersion >= 0x20000);
     }
 }

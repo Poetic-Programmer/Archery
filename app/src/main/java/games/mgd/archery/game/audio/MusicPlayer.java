@@ -1,13 +1,17 @@
 package games.mgd.archery.game.audio;
 
+/**
+ * <h1> Music Player </h1>
+ *
+ * <p> Creates a music player. sets a listener for completion events </p>
+ * @author Michael Dunleavy
+ * @since 24/07/2016
+ */
+
 import java.io.IOException;
 
-import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.SoundPool;
 
 public class MusicPlayer implements Music, MediaPlayer.OnCompletionListener {
     MediaPlayer mediaPlayer;

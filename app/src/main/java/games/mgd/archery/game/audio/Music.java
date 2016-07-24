@@ -1,7 +1,10 @@
 package games.mgd.archery.game.audio;
 
 /**
- * Created by Michael on 22/07/2016.
+ * <h1> Simple Music Interface </h1>
+ *
+ * @author Michael Dunleavy
+ * @since 22/07/2016.
  */
 public interface Music {
     void play();

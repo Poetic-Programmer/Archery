@@ -10,8 +10,10 @@ import games.mgd.archery.logic.geometry.structure.Structure;
 import games.mgd.archery.logic.program.Program;
 
 /**
- * Created by Michael on 23/02/2016.
+ * @author Michael Dunleavy
+ * @since 24/07/2016.
  */
+
 public class LitTextureProgram extends Program {
     private static final int POSITION_COMPONENT_COUNT = 3;
     private static final int NORMAL_COMPONENT_COUNT = 3;
@@ -24,9 +26,9 @@ public class LitTextureProgram extends Program {
     protected List<String> getAttributeList() {
         List<String> arrayList = new ArrayList<>();
 
-        arrayList.add(A_POSITION_3D);
-        arrayList.add(A_NORMAL_3D);
-        arrayList.add(A_TEX_COORDS_2D);
+        arrayList.add(Shader.A_POSITION_3D);
+        arrayList.add(Shader.A_NORMAL_3D);
+        arrayList.add(Shader.A_TEX_COORDS_2D);
 
         return arrayList;
     }
@@ -34,55 +36,64 @@ public class LitTextureProgram extends Program {
     @Override
     protected HashMap<String, Integer> getUniformList() {
         HashMap<String, Integer> map = new HashMap<>();
-        map.put(U_MV_MATRIX, GLES20.glGetUniformLocation(this.program, U_MV_MATRIX));
-        map.put(U_MVP_MATRIX, GLES20.glGetUniformLocation(this.program, U_MVP_MATRIX));
-        map.put(U_POSITION_LIGHT_POSITION_3D, GLES20.glGetUniformLocation(this.program, U_POSITION_LIGHT_POSITION_3D));
-        map.put(U_POSITION_LIGHT_AMBIENT, GLES20.glGetUniformLocation(this.program, U_POSITION_LIGHT_AMBIENT));
-        map.put(U_POSITION_LIGHT_DIFFUSE, GLES20.glGetUniformLocation(this.program, U_POSITION_LIGHT_DIFFUSE));
-        map.put(U_POSITION_LIGHT_SPECULAR, GLES20.glGetUniformLocation(this.program, U_POSITION_LIGHT_SPECULAR));
-        map.put(U_MATERIAL_AMBIENT, GLES20.glGetUniformLocation(this.program, U_MATERIAL_AMBIENT));
-        map.put(U_MATERIAL_DIFFUSE, GLES20.glGetUniformLocation(this.program, U_MATERIAL_DIFFUSE));
-        map.put(U_MATERIAL_SPECULAR, GLES20.glGetUniformLocation(this.program, U_MATERIAL_SPECULAR));
-        map.put(U_MATERIAL_SPECULAR_HIGHLIGHT, GLES20.glGetUniformLocation(this.program, U_MATERIAL_SPECULAR_HIGHLIGHT));
-        map.put(U_TEXTURE0, GLES20.glGetUniformLocation(this.program, U_TEXTURE0));
+
+        map.put(Shader.U_MV_MATRIX, GLES20.glGetUniformLocation(this.program, Shader.U_MV_MATRIX));
+        map.put(Shader.U_MVP_MATRIX, GLES20.glGetUniformLocation(this.program,
+                Shader.U_MVP_MATRIX));
+        map.put(Shader.U_POSITION_LIGHT_POSITION_3D, GLES20.glGetUniformLocation(this.program,
+                Shader.U_POSITION_LIGHT_POSITION_3D));
+        map.put(Shader.U_POSITION_LIGHT_AMBIENT, GLES20.glGetUniformLocation(this.program,
+                Shader.U_POSITION_LIGHT_AMBIENT));
+        map.put(Shader.U_POSITION_LIGHT_DIFFUSE, GLES20.glGetUniformLocation(this.program,
+                Shader.U_POSITION_LIGHT_DIFFUSE));
+        map.put(Shader.U_POSITION_LIGHT_SPECULAR, GLES20.glGetUniformLocation(this.program,
+                Shader.U_POSITION_LIGHT_SPECULAR));
+        map.put(Shader.U_MATERIAL_AMBIENT, GLES20.glGetUniformLocation(this.program,
+                Shader.U_MATERIAL_AMBIENT));
+        map.put(Shader.U_MATERIAL_DIFFUSE, GLES20.glGetUniformLocation(this.program,
+                Shader.U_MATERIAL_DIFFUSE));
+        map.put(Shader.U_MATERIAL_SPECULAR, GLES20.glGetUniformLocation(this.program,
+                Shader.U_MATERIAL_SPECULAR));
+        map.put(Shader.U_MATERIAL_SPECULAR_HIGHLIGHT, GLES20.glGetUniformLocation(this.program,
+                Shader.U_MATERIAL_SPECULAR_HIGHLIGHT));
+        map.put(Shader.U_TEXTURE0, GLES20.glGetUniformLocation(this.program, Shader.U_TEXTURE0));
         return map;
     }
 
     @Override
     public void setVertexAttribPointer(Structure structure) {
-
         structure.getVertexBuffer().position(0);
 
         GLES20.glVertexAttribPointer(
-                getAttributeLocation(A_POSITION_3D),
+                getAttributeLocation(Shader.A_POSITION_3D),
                 POSITION_COMPONENT_COUNT,
                 GLES20.GL_FLOAT, false,
                 STRIDE,
                 structure.getVertexBuffer());
-        GLES20.glEnableVertexAttribArray(getAttributeLocation(A_POSITION_3D));
+        GLES20.glEnableVertexAttribArray(getAttributeLocation(Shader.A_POSITION_3D));
 
         structure.getVertexBuffer().position(POSITION_COMPONENT_COUNT);
         GLES20.glVertexAttribPointer(
-                getAttributeLocation(A_NORMAL_3D),
+                getAttributeLocation(Shader.A_NORMAL_3D),
                 NORMAL_COMPONENT_COUNT,
                 GLES20.GL_FLOAT, false,
                 STRIDE,
                 structure.getVertexBuffer()
         );
-        GLES20.glEnableVertexAttribArray(getAttributeLocation(A_NORMAL_3D));
+        GLES20.glEnableVertexAttribArray(getAttributeLocation(Shader.A_NORMAL_3D));
 
         structure.getVertexBuffer().position(
                 POSITION_COMPONENT_COUNT + NORMAL_COMPONENT_COUNT
         );
         GLES20.glVertexAttribPointer(
-                getAttributeLocation(A_TEX_COORDS_2D),
+                getAttributeLocation(Shader.A_TEX_COORDS_2D),
                 TEXTURE_COMPONENT_COUNT,
                 GLES20.GL_FLOAT, false,
                 STRIDE,
                 structure.getVertexBuffer()
         );
 
-        GLES20.glEnableVertexAttribArray(getAttributeLocation(A_TEX_COORDS_2D));
+        GLES20.glEnableVertexAttribArray(getAttributeLocation(Shader.A_TEX_COORDS_2D));
 
         structure.getVertexBuffer().position(0);
     }

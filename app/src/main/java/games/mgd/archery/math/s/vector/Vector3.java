@@ -20,7 +20,9 @@ public class Vector3
     public static float [] create(final float x, final float y, final float z){
         return new float [] {x, y, z};
     }
-
+	public static float [] create(){
+        return new float [] {0, 0, 0};
+    }
 	public static void zero(float [] src)
 	{
 		src[0] = 0.0f;

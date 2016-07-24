@@ -1,5 +1,13 @@
 package games.mgd.archery.game.audio;
 
+/**
+ * <h1> Sound Player </h1>
+ * <p> Creates a sound player </p>
+ *
+ * @author Michael Dunleavy
+ * @since 24/07/2016
+ */
+
 import android.media.SoundPool;
 
 public class SoundPlayer implements Sound {

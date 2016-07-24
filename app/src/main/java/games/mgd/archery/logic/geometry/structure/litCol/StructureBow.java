@@ -1,4 +1,4 @@
-package games.mgd.archery.logic.geometry.structure.litTex;
+package games.mgd.archery.logic.geometry.structure.litCol;
 
 import android.opengl.GLES20;
 import android.util.Log;
@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import games.mgd.archery.logic.World;
 import games.mgd.archery.logic.geometry.factory.GeoLitTextureFactory;
 import games.mgd.archery.logic.geometry.structure.Structure;
 import games.mgd.archery.math.c.curve.CubicBezierCurve3D;
@@ -17,16 +18,21 @@ import games.mgd.archery.math.s.vector.Vector3;
  * Created by Michael on 20/03/2016.
  */
 public class StructureBow  extends Structure {
+    private static final String TAG = "StructureBow";
+
+    private int gripIndexOffset;
+    private int limbIndexOffset;
+
     private static final int slices = 16;
     private static final int perLimbStacks = 16;
 
-    float bowHeight = 9.0f;
+    float bowHeight = World.INSTANCE.getCellRelHeight(8);
     float halfBowHeight = bowHeight * 0.5f;
 
-    float gripHeight = 1.0f;
+    float gripHeight = World.INSTANCE.getCellRelHeight(1);
     float halfGripHeight = gripHeight * 0.5f;
 
-    float bowWidth = 4.0f;
+    float bowWidth = World.INSTANCE.getCellRelWidth(2f);
 
     float radiusX = (1.0f / bowWidth) * (1.0f / 2.0f);
     float radiusZ = (1.0f / bowWidth) * (1.0f / 1.5f);
@@ -38,8 +44,14 @@ public class StructureBow  extends Structure {
         counter = 0;
     }
 
+    private void printBowStats(){
+        Log.d(TAG, "world grip width: " + World.INSTANCE.getGridCellWidth());
+        Log.d(TAG, "height: " + bowHeight);
+        Log.d(TAG, "width: " + bowWidth);
+    }
     private int appendCircle(float [] vertices, int offset, float radius,
                              float [] origin, float [] axisA, float [] axisB, float v){
+        //printBowStats();
         counter++;
         float thetaStep = (float) (Math.PI * 2) / (float) slices;
         float [] position = new float[3];
@@ -162,8 +174,8 @@ public class StructureBow  extends Structure {
 
         float step = 1.0f / (bowWidth) * 2;
         float [] cp0 = Vector3.create(0, -halfGripHeight, 0);
-        float [] cp1 = Vector3.create(step, -halfGripHeight - (step * 4), 0);
-        float [] cp2 = Vector3.create(step * 4, -halfGripHeight - (step * 7), 0);
+        float [] cp1 = Vector3.create(step * 2, -halfGripHeight - (step * 7), 0);
+        float [] cp2 = Vector3.create(step * 4, -halfGripHeight - (step * 4), 0);
         float [] cp3 = Vector3.create(bowWidth, -halfBowHeight, 0);
 
         CubicBezierCurve3D topCurve = CubicBezierCurve3D.createWith(
@@ -202,15 +214,14 @@ public class StructureBow  extends Structure {
                 0.0f, halfGripHeight, 0.0f
         );
 
+
         offset = createGripBetween(vertices, offset,
                 gripCurve.evaluate(0), gripCurve.evaluate(1), radiusX);
+
+        final int endGripOffset = offset;
+
         offset = createTopLimb(vertices, offset);
         offset = createBottomLimb(vertices, offset);
-
-        int printOffset = 0;
-        for(float f : vertices){
-            //Log.d("print " + printOffset++, "<" + f + ">");
-        }
 
         numVertices = vertices.length;
 
@@ -233,7 +244,7 @@ public class StructureBow  extends Structure {
 
         for(int i = 0; i < perLimbStacks; ++i){
             vertexOffset = slices * (i + 1);
-            offset = createGripIndices(indices, offset, vertexOffset, false);
+            offset = gripIndexOffset = createGripIndices(indices, offset, vertexOffset, false);
         }
 
         vertexOffset = (2 + perLimbStacks) * slices;
@@ -243,7 +254,7 @@ public class StructureBow  extends Structure {
             vertexOffset = (slices) + (perLimbStacks * slices) +
                     slices * (i);
 
-            offset = createGripIndices(indices, offset, vertexOffset, true);
+            offset = limbIndexOffset = createGripIndices(indices, offset, vertexOffset, true);
         }
 
         return indices;
@@ -359,7 +370,16 @@ public class StructureBow  extends Structure {
             @Override
             public void draw() {
                 GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, indexBuffer.getId());
-                GLES20.glDrawElements(GLES20.GL_TRIANGLES, indexBuffer.getSize(), GLES20.GL_UNSIGNED_SHORT, 0);
+                GLES20.glDrawElements(GLES20.GL_TRIANGLES, gripIndexOffset, GLES20.GL_UNSIGNED_SHORT, 0);
+                GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
+            }
+        });
+
+        drawList.add(new DrawProcedure() {
+            @Override
+            public void draw() {
+                GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, indexBuffer.getId());
+                GLES20.glDrawElements(GLES20.GL_TRIANGLES, limbIndexOffset, GLES20.GL_UNSIGNED_SHORT, gripIndexOffset);
                 GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
             }
         });

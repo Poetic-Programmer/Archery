@@ -32,17 +32,22 @@ varying vec4 v_Colour;
 
 vec4 CalculatePositionLight(vec3 position, vec3 normal)
 {
-	vec4 light = vec4(ZERO, ZERO, ZERO, ONE);
+	vec4 light = vec4(ZERO, ZERO, ZERO, ZERO);
 
+    float distance = length(u_PositionLight.Position - position);
 	vec3 direction = normalize(u_PositionLight.Position - position);
-	float ndotd = dot(normal, direction);
+	float ndotd = max(ZERO, dot(normal, direction));
 	vec3 reflection = (2.0 * ndotd * normal) - direction;
-	float ndotr = dot(normal, reflection);
+
+	float attenuation = ONE / (ONE + (0.005 * distance) + (0.0005 * distance * distance));
+
+	float ndotr = max(ZERO, dot(normal, reflection));
 
 	light += u_PositionLight.Ambient * u_Material.Ambient;
-	if(ndotr > 0.0){
-		light += u_PositionLight.Diffuse * u_Material.Diffuse * ndotd;
-		light += u_PositionLight.Specular * u_Material.Specular * pow(ndotr, u_Material.SpecularHighlight);
+	light += u_PositionLight.Diffuse * u_Material.Diffuse * ndotd * attenuation;
+	if(ndotd > ZERO){
+
+		light += u_PositionLight.Specular * u_Material.Specular * pow(ndotr, u_Material.SpecularHighlight) * attenuation;
 	}
 	return light;
 }

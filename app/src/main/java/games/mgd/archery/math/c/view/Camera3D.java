@@ -26,6 +26,9 @@ public class Camera3D {
     private float xRotation;
     private float yRotation;
 
+    private float fov;
+    private float aspectRatio;
+
     public float [] getPosition() { return position; }
     public float [] getView () { return view; }
     public float [] getProjection () { return projection; }
@@ -37,6 +40,9 @@ public class Camera3D {
     }
 
     public void initialize(float fov, float ratio, float near, float far){
+        this.fov = fov;
+        this.aspectRatio = ratio;
+
         setProjection(fov, ratio, near, far);
         setView();
     }
@@ -69,5 +75,18 @@ public class Camera3D {
                 0, 0, -((far + near) / (far - near)), -1.0f,
                 0, 0, -((2f * far * near) / (far - near)), 0
         );
+    }
+
+    public float getDisplayWidth() {
+        float tan = (float) Math.tan(fov * 0.5f * MathHelper.DEGREES_TO_RADIANS);
+        float height = position[2] * tan;
+        float width = height * aspectRatio;
+        return width;
+    }
+
+    public float getDisplayHeight() {
+        float tan = (float) Math.tan(fov * 0.5f * MathHelper.DEGREES_TO_RADIANS);
+        float height = position[2] * tan;
+        return height;
     }
 }

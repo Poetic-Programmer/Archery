@@ -2,7 +2,7 @@ package games.mgd.archery.logic.geometry.factory;
 
 import games.mgd.archery.logic.geometry.structure.Structure;
 import games.mgd.archery.logic.geometry.structure.StructureType;
-import games.mgd.archery.logic.geometry.structure.litTex.StructureBow;
+import games.mgd.archery.logic.geometry.structure.litCol.StructureBow;
 
 /**
  * Created by Michael on 24/02/2016.

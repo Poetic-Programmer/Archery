@@ -1,31 +1,41 @@
 package games.mgd.archery;
 
-import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
-import static android.opengl.GLES20.glClear;
-import static android.opengl.GLES20.glClearColor;
+/**
+ * <h1> game renderer </h1>
+ * <p> this renderer updates all of the states of the game. It communicates with the
+ * main activity as to properly deal with resources when the user interacts with other
+ * features of their device. </p>
+ *
+ * @author Michael
+ * @since 22/07/2016.
+ */
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Log;
 
 import games.mgd.archery.logic.MainLogic;
-
-/**
- * Created by Michael on 22/07/2016.
- */
+import games.mgd.archery.logic.World;
 
 public class MainRenderer implements Renderer{
+    private static final String TAG = "Renderer";
+
     // Get a reference to the context
-    private static Context context = null;
+    private Context context = null;
 
     private MainLogic game;
     private GameTimer timer;
 
     private int width, height;
-
+    /**
+     * creates all objects neccessary for interacting with the game.
+     * creates the graphics object, which holds the gl view.
+     *
+     * @param context used to set up renderer, reference is saved for further use
+     */
     public MainRenderer(Context context){
         this.context = context;
 
@@ -40,9 +50,6 @@ public class MainRenderer implements Renderer{
         if (GameThread.INSTANCE.isIdle()) {
             // This is the first time the game is loaded.
             GameThread.INSTANCE.initialize();
-        }
-        else{
-            // Game potentially resized or reloaded
         }
     }
 

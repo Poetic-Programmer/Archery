@@ -3,18 +3,29 @@ package games.mgd.archery.game.audio;
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
 import java.io.IOException;
 
 /**
- * Created by Michael on 22/07/2016.
+ * <h1> Audio Player </h1>
+ * <p>All music and sounds are created through this class</p>
+ *
+ * @author Michael Dunleavy
+ * @since 24/07/2016
+ * @ToDo: update soundpool
  */
-public class AudioPlayer {
+public class AudioPlayer implements Audio{
     AssetManager assets;
     SoundPool soundPool;
 
+    /**
+     * creates an audio player for all audio files to be created
+     *
+     * @param activity used to get the audio stream to read volume key presses from the user
+     */
     public AudioPlayer(Activity activity) {
         activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         this.assets = activity.getAssets();
